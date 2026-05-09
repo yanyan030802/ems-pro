@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EMS Pro — Employee Management System</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+<!-- ══════════════ LOGIN SCREEN ══════════════ -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <i class="fas fa-id-badge"></i>
+      <h1>EMS <span>Pro</span></h1>
+      <p>Employee Management System</p>
+    </div>
+    <div id="loginError" class="alert alert-error hidden"></div>
+    <div class="form-group">
+      <label>Email Address</label>
+      <div class="input-icon">
+        <i class="fas fa-envelope"></i>
+        <input type="email" id="loginEmail" placeholder="admin@company.com" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <div class="input-icon">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="loginPassword" placeholder="••••••••" />
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="loginUser()">
+      <i class="fas fa-sign-in-alt"></i> Sign In
+    </button>
+    <div class="login-footer">
+      <p>Don't have an account? <a href="#" onclick="showRegister()">Register here</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ REGISTER SCREEN ══════════════ -->
+<div id="registerScreen" class="login-screen hidden">
+  <div class="login-card">
+    <div class="login-logo">
+      <i class="fas fa-user-plus"></i>
+      <h1>Create <span>Account</span></h1>
+      <p>EMS Pro — Register</p>
+    </div>
+    <div id="registerError" class="alert alert-error hidden"></div>
+    <div class="form-group">
+      <label>Full Name</label>
+      <div class="input-icon">
+        <i class="fas fa-user"></i>
+        <input type="text" id="regName" placeholder="Juan Dela Cruz" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Email Address</label>
+      <div class="input-icon">
+        <i class="fas fa-envelope"></i>
+        <input type="email" id="regEmail" placeholder="admin@company.com" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <div class="input-icon">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="regPassword" placeholder="min. 6 characters" />
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="registerUser()">
+      <i class="fas fa-user-plus"></i> Create Account
+    </button>
+    <div class="login-footer">
+      <p>Already have an account? <a href="#" onclick="showLogin()">Sign in</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ MAIN APP ══════════════ -->
+<div id="app" class="app hidden">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <i class="fas fa-id-badge"></i>
+      <span>EMS Pro</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item active" onclick="showPage('dashboard', this)">
+        <i class="fas fa-chart-pie"></i><span>Dashboard</span>
+      </a>
+      <a href="#" class="nav-item" onclick="showPage('employees', this)">
+        <i class="fas fa-users"></i><span>Employees</span>
+      </a>
+      <a href="#" class="nav-item" onclick="showPage('attendance', this)">
+        <i class="fas fa-clock"></i><span>Attendance</span>
+      </a>
+      <a href="#" class="nav-item" onclick="showPage('leave', this)">
+        <i class="fas fa-calendar-alt"></i><span>Leave</span>
+      </a>
+      <a href="#" class="nav-item" onclick="showPage('payroll', this)">
+        <i class="fas fa-money-bill-wave"></i><span>Payroll</span>
+      </a>
+      <a href="#" class="nav-item" onclick="showPage('performance', this)">
+        <i class="fas fa-star"></i><span>Performance</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="avatar" id="sidebarAvatar">A</div>
+        <div>
+          <div id="sidebarName" class="user-name">Admin</div>
+          <div class="user-role">HR Administrator</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="logoutUser()"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <header class="topbar">
+      <button class="btn-menu" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+      <div class="topbar-title" id="pageTitle">Dashboard</div>
+      <div class="topbar-right">
+        <span id="topbarDate"></span>
+        <div class="notif-bell"><i class="fas fa-bell"></i><span class="badge" id="notifBadge">0</span></div>
+      </div>
+    </header>
+
+    <!-- Toast -->
+    <div id="toast" class="toast hidden"></div>
+
+    <!-- ── DASHBOARD ── -->
+    <section id="page-dashboard" class="page active">
+      <div class="page-header">
+        <h2>Dashboard Overview</h2>
+        <p>Welcome back! Here's what's happening today.</p>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card blue">
+          <div class="stat-icon"><i class="fas fa-users"></i></div>
+          <div class="stat-info">
+            <div class="stat-num" id="stat-total">0</div>
+            <div class="stat-label">Total Employees</div>
+          </div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-icon"><i class="fas fa-user-check"></i></div>
+          <div class="stat-info">
+            <div class="stat-num" id="stat-active">0</div>
+            <div class="stat-label">Active Employees</div>
+          </div>
+        </div>
+        <div class="stat-card orange">
+          <div class="stat-icon"><i class="fas fa-calendar-times"></i></div>
+          <div class="stat-info">
+            <div class="stat-num" id="stat-onleave">0</div>
+            <div class="stat-label">On Leave Today</div>
+          </div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-icon"><i class="fas fa-building"></i></div>
+          <div class="stat-info">
+            <div class="stat-num" id="stat-depts">0</div>
+            <div class="stat-label">Departments</div>
+          </div>
+        </div>
+      </div>
+      <div class="dashboard-grid">
+        <div class="card">
+          <div class="card-header"><h3>Recent Employees</h3></div>
+          <div class="card-body">
+            <table class="table">
+              <thead><tr><th>Name</th><th>Department</th><th>Status</th></tr></thead>
+              <tbody id="recentEmpTable"><tr><td colspan="3" class="empty">No employees yet.</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Department Distribution</h3></div>
+          <div class="card-body" id="deptChart"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── EMPLOYEES ── -->
+    <section id="page-employees" class="page hidden">
+      <div class="page-header">
+        <h2>Employee Records</h2>
+        <button class="btn btn-primary" onclick="openModal('addEmpModal')">
+          <i class="fas fa-plus"></i> Add Employee
+        </button>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <input type="text" class="search-box" id="empSearch" placeholder="🔍  Search employees..." oninput="filterEmployees()"/>
+          <select id="empDeptFilter" onchange="filterEmployees()" class="filter-select">
+            <option value="">All Departments</option>
+          </select>
+        </div>
+        <div class="card-body">
+          <table class="table" id="empTable">
+            <thead>
+              <tr>
+                <th>ID</th><th>Name</th><th>Position</th><th>Department</th>
+                <th>Email</th><th>Status</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="empTableBody"><tr><td colspan="7" class="empty">No employees found.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── ATTENDANCE ── -->
+    <section id="page-attendance" class="page hidden">
+      <div class="page-header">
+        <h2>Attendance Tracking</h2>
+        <button class="btn btn-primary" onclick="openModal('addAttModal')">
+          <i class="fas fa-plus"></i> Log Attendance
+        </button>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <input type="date" id="attDateFilter" onchange="filterAttendance()" class="filter-select" />
+        </div>
+        <div class="card-body">
+          <table class="table">
+            <thead>
+              <tr><th>Employee</th><th>Date</th><th>Time In</th><th>Time Out</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="attTableBody"><tr><td colspan="6" class="empty">No attendance records.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── LEAVE ── -->
+    <section id="page-leave" class="page hidden">
+      <div class="page-header">
+        <h2>Leave Management</h2>
+        <button class="btn btn-primary" onclick="openModal('addLeaveModal')">
+          <i class="fas fa-plus"></i> File Leave
+        </button>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <table class="table">
+            <thead>
+              <tr><th>Employee</th><th>Leave Type</th><th>From</th><th>To</th><th>Days</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="leaveTableBody"><tr><td colspan="7" class="empty">No leave records.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PAYROLL ── -->
+    <section id="page-payroll" class="page hidden">
+      <div class="page-header">
+        <h2>Payroll Management</h2>
+        <button class="btn btn-primary" onclick="openModal('addPayModal')">
+          <i class="fas fa-plus"></i> Add Payroll Record
+        </button>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <table class="table">
+            <thead>
+              <tr><th>Employee</th><th>Period</th><th>Basic Salary</th><th>Deductions</th><th>Net Pay</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="payTableBody"><tr><td colspan="7" class="empty">No payroll records.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PERFORMANCE ── -->
+    <section id="page-performance" class="page hidden">
+      <div class="page-header">
+        <h2>Performance Evaluation</h2>
+        <button class="btn btn-primary" onclick="openModal('addPerfModal')">
+          <i class="fas fa-plus"></i> Add Evaluation
+        </button>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <table class="table">
+            <thead>
+              <tr><th>Employee</th><th>Period</th><th>Rating</th><th>Score</th><th>Remarks</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="perfTableBody"><tr><td colspan="6" class="empty">No evaluations yet.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ══════════════ MODALS ══════════════ -->
+
+<!-- Add/Edit Employee Modal -->
+<div class="modal-overlay hidden" id="addEmpModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="empModalTitle">Add New Employee</h3>
+      <button class="modal-close" onclick="closeModal('addEmpModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="empDocId" />
+      <div class="form-row">
+        <div class="form-group">
+          <label>Employee ID *</label>
+          <input type="text" id="empId" placeholder="EMP-001" />
+        </div>
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="empName" placeholder="Juan Dela Cruz" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Position *</label>
+          <input type="text" id="empPosition" placeholder="Software Developer" />
+        </div>
+        <div class="form-group">
+          <label>Department *</label>
+          <input type="text" id="empDept" placeholder="IT Department" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" id="empEmail" placeholder="juan@company.com" />
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="text" id="empPhone" placeholder="09XX-XXX-XXXX" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date Hired</label>
+          <input type="date" id="empHired" />
+        </div>
+        <div class="form-group">
+          <label>Employment Type</label>
+          <select id="empType">
+            <option>Regular</option><option>Contractual</option><option>Part-Time</option><option>Probationary</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Salary (₱)</label>
+          <input type="number" id="empSalary" placeholder="25000" />
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="empStatus">
+            <option>Active</option><option>Inactive</option><option>On Leave</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('addEmpModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEmployee()">Save Employee</button>
+    </div>
+  </div>
+</div>
+
+<!-- Attendance Modal -->
+<div class="modal-overlay hidden" id="addAttModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="attModalTitle">Log Attendance</h3>
+      <button class="modal-close" onclick="closeModal('addAttModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="attDocId" />
+      <div class="form-group">
+        <label>Employee *</label>
+        <select id="attEmp"></select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date *</label>
+          <input type="date" id="attDate" />
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="attStatus">
+            <option>Present</option><option>Absent</option><option>Late</option><option>Half Day</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Time In</label>
+          <input type="time" id="attIn" />
+        </div>
+        <div class="form-group">
+          <label>Time Out</label>
+          <input type="time" id="attOut" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('addAttModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveAttendance()">Save Record</button>
+    </div>
+  </div>
+</div>
+
+<!-- Leave Modal -->
+<div class="modal-overlay hidden" id="addLeaveModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="leaveModalTitle">File Leave Request</h3>
+      <button class="modal-close" onclick="closeModal('addLeaveModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="leaveDocId" />
+      <div class="form-group">
+        <label>Employee *</label>
+        <select id="leaveEmp"></select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Leave Type</label>
+          <select id="leaveType">
+            <option>Vacation Leave</option><option>Sick Leave</option><option>Emergency Leave</option>
+            <option>Maternity/Paternity</option><option>Others</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="leaveStatus">
+            <option>Pending</option><option>Approved</option><option>Rejected</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>From *</label>
+          <input type="date" id="leaveFrom" />
+        </div>
+        <div class="form-group">
+          <label>To *</label>
+          <input type="date" id="leaveTo" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Reason</label>
+        <textarea id="leaveReason" rows="2" placeholder="Briefly explain the reason..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('addLeaveModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveLeave()">Submit Request</button>
+    </div>
+  </div>
+</div>
+
+<!-- Payroll Modal -->
+<div class="modal-overlay hidden" id="addPayModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="payModalTitle">Add Payroll Record</h3>
+      <button class="modal-close" onclick="closeModal('addPayModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="payDocId" />
+      <div class="form-group">
+        <label>Employee *</label>
+        <select id="payEmp"></select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Pay Period</label>
+          <input type="text" id="payPeriod" placeholder="May 1-15, 2026" />
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="payStatus">
+            <option>Pending</option><option>Released</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Basic Salary (₱)</label>
+          <input type="number" id="payBasic" oninput="calcNetPay()" placeholder="0" />
+        </div>
+        <div class="form-group">
+          <label>Deductions (₱)</label>
+          <input type="number" id="payDeductions" oninput="calcNetPay()" placeholder="0" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Net Pay (₱) — auto calculated</label>
+        <input type="number" id="payNet" placeholder="0" readonly style="background:#f0f4ff" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('addPayModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="savePayroll()">Save Record</button>
+    </div>
+  </div>
+</div>
+
+<!-- Performance Modal -->
+<div class="modal-overlay hidden" id="addPerfModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="perfModalTitle">Add Performance Evaluation</h3>
+      <button class="modal-close" onclick="closeModal('addPerfModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="perfDocId" />
+      <div class="form-group">
+        <label>Employee *</label>
+        <select id="perfEmp"></select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Evaluation Period</label>
+          <input type="text" id="perfPeriod" placeholder="Q1 2026" />
+        </div>
+        <div class="form-group">
+          <label>Rating</label>
+          <select id="perfRating">
+            <option>Outstanding</option><option>Very Satisfactory</option><option>Satisfactory</option>
+            <option>Needs Improvement</option><option>Unsatisfactory</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Score (1-100)</label>
+          <input type="number" id="perfScore" min="1" max="100" placeholder="85" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Remarks</label>
+        <textarea id="perfRemarks" rows="2" placeholder="Evaluator's remarks..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('addPerfModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="savePerformance()">Save Evaluation</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div class="modal-overlay hidden" id="deleteModal">
+  <div class="modal modal-sm">
+    <div class="modal-header">
+      <h3>Confirm Delete</h3>
+      <button class="modal-close" onclick="closeModal('deleteModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <p style="text-align:center; font-size:3rem; margin:0.5rem 0">🗑️</p>
+      <p id="deleteMsg" style="text-align:center; color:#555">Are you sure you want to delete this record? This action cannot be undone.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('deleteModal')">Cancel</button>
+      <button class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module" src="app.js"></script>
+</body>
+</html>
