@@ -72,6 +72,24 @@
         <input type="password" id="regPassword" placeholder="min. 6 characters" />
       </div>
     </div>
+    <div class="form-group">
+      <label>Account Role</label>
+      <div class="input-icon">
+        <i class="fas fa-user-tag"></i>
+        <select id="regRole" onchange="onRoleChange()" style="padding-left:2.25rem">
+          <option value="user">👤 Staff (View Only)</option>
+          <option value="admin">👑 Administrator (Full Access)</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group hidden" id="adminKeyGroup">
+      <label>Admin Secret Key</label>
+      <div class="input-icon">
+        <i class="fas fa-key"></i>
+        <input type="password" id="adminKey" placeholder="Enter admin key" />
+      </div>
+      <small style="color:#64748b;font-size:0.75rem">⚠️ Key: EMS-ADMIN-2026 (share only with trusted admins)</small>
+    </div>
     <button class="btn btn-primary btn-full" onclick="registerUser()">
       <i class="fas fa-user-plus"></i> Create Account
     </button>
@@ -115,7 +133,7 @@
         <div class="avatar" id="sidebarAvatar">A</div>
         <div>
           <div id="sidebarName" class="user-name">Admin</div>
-          <div class="user-role">HR Administrator</div>
+          <div id="sidebarRole" class="user-role">HR Administrator</div>
         </div>
       </div>
       <button class="btn-logout" onclick="logoutUser()"><i class="fas fa-sign-out-alt"></i></button>
@@ -132,6 +150,12 @@
         <div class="notif-bell"><i class="fas fa-bell"></i><span class="badge" id="notifBadge">0</span></div>
       </div>
     </header>
+
+    <!-- Role Notice for non-admins -->
+    <div id="roleNotice" style="display:none; background:#fef3c7; border-bottom:1px solid #fcd34d; padding:0.6rem 1.5rem; align-items:center; gap:0.5rem; font-size:0.85rem; color:#92400e;">
+      <i class="fas fa-eye"></i>
+      <span>You have <strong>View Only</strong> access. Contact an Administrator to make changes.</span>
+    </div>
 
     <!-- Toast -->
     <div id="toast" class="toast hidden"></div>
@@ -193,7 +217,7 @@
     <section id="page-employees" class="page hidden">
       <div class="page-header">
         <h2>Employee Records</h2>
-        <button class="btn btn-primary" onclick="openModal('addEmpModal')">
+        <button class="btn btn-primary admin-only" onclick="openModal('addEmpModal')">
           <i class="fas fa-plus"></i> Add Employee
         </button>
       </div>
@@ -222,7 +246,7 @@
     <section id="page-attendance" class="page hidden">
       <div class="page-header">
         <h2>Attendance Tracking</h2>
-        <button class="btn btn-primary" onclick="openModal('addAttModal')">
+        <button class="btn btn-primary admin-only" onclick="openModal('addAttModal')">
           <i class="fas fa-plus"></i> Log Attendance
         </button>
       </div>
@@ -245,7 +269,7 @@
     <section id="page-leave" class="page hidden">
       <div class="page-header">
         <h2>Leave Management</h2>
-        <button class="btn btn-primary" onclick="openModal('addLeaveModal')">
+        <button class="btn btn-primary admin-only" onclick="openModal('addLeaveModal')">
           <i class="fas fa-plus"></i> File Leave
         </button>
       </div>
@@ -265,7 +289,7 @@
     <section id="page-payroll" class="page hidden">
       <div class="page-header">
         <h2>Payroll Management</h2>
-        <button class="btn btn-primary" onclick="openModal('addPayModal')">
+        <button class="btn btn-primary admin-only" onclick="openModal('addPayModal')">
           <i class="fas fa-plus"></i> Add Payroll Record
         </button>
       </div>
@@ -285,7 +309,7 @@
     <section id="page-performance" class="page hidden">
       <div class="page-header">
         <h2>Performance Evaluation</h2>
-        <button class="btn btn-primary" onclick="openModal('addPerfModal')">
+        <button class="btn btn-primary admin-only" onclick="openModal('addPerfModal')">
           <i class="fas fa-plus"></i> Add Evaluation
         </button>
       </div>
