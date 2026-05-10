@@ -16,12 +16,12 @@ import {
 
 // ── YOUR FIREBASE CONFIG (replace with yours from Step 2 in the guide) ──
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+apiKey: "AIzaSyAQ2WNK00OWJRkefj2Vwpw8glk6un5Gfcw",
+  authDomain: "ems-pro-6040d.firebaseapp.com",
+  projectId: "ems-pro-6040d",
+  storageBucket: "ems-pro-6040d.firebasestorage.app",
+  messagingSenderId: "617342037987",
+  appId: "1:617342037987:web:c5693aa7123dff49eebad6"
 };
 
 // Initialize Firebase
