@@ -1,441 +1,219 @@
-/* ═══════════════════════════════════════════
-   EMS Pro — style.css
-   Employee Management System
-═══════════════════════════════════════════ */
+import turtle as t
+import time
 
-:root {
-  --primary: #4f46e5;
-  --primary-light: #6366f1;
-  --primary-dark: #3730a3;
-  --secondary: #f1f5f9;
-  --success: #22c55e;
-  --warning: #f59e0b;
-  --danger: #ef4444;
-  --info: #3b82f6;
-  --text: #1e293b;
-  --text-light: #64748b;
-  --border: #e2e8f0;
-  --white: #ffffff;
-  --sidebar-w: 240px;
-  --radius: 12px;
-  --shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.05);
-  --shadow-lg: 0 10px 40px rgba(0,0,0,.15);
-}
+# Modern color palette
+BG_COLOR = "#0f172a"
+PRIMARY_COLOR = "#60a5fa"
+ACCENT_COLORS = ["#fbbf24", "#34d399", "#a78bfa", "#60a5fa", "#f472b6", "#fb923c"]
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+screen = t.Screen()
+screen.bgcolor(BG_COLOR)
+screen.title("🎨 Interactive Turtle Graphics Tutorial")
+screen.setup(width=900, height=700)
 
-body {
-  font-family: 'Inter', sans-serif;
-  background: #f8fafc;
-  color: var(--text);
-  font-size: 14px;
-  line-height: 1.6;
-}
+waiting = True
 
-/* ──── UTILITIES ──── */
-.hidden { display: none !important; }
-.active { display: block !important; }
+def continue_drawing(x, y):
+    global waiting
+    waiting = False
 
-/* ──── LOGIN ──── */
-.login-screen {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #a855f7 100%);
-  padding: 1rem;
-}
+def pause_until_click():
+    global waiting
+    waiting = True
+    screen.onclick(continue_drawing)
+    while waiting:
+        screen.update()
 
-.login-card {
-  background: var(--white);
-  border-radius: 20px;
-  padding: 2.5rem;
-  width: 100%;
-  max-width: 420px;
-  box-shadow: var(--shadow-lg);
-}
+def show_title(text):
+    """Display a title for each section"""
+    t.penup()
+    t.goto(0, 280)
+    t.color("#34d399")
+    t.write(text, align="center", font=("Arial", 14, "bold"))
+    t.goto(0, 0)
+    t.pendown()
 
-.login-logo {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-.login-logo i { font-size: 3rem; color: var(--primary); }
-.login-logo h1 { font-size: 2rem; font-weight: 700; color: var(--text); margin-top: 0.5rem; }
-.login-logo h1 span { color: var(--primary); }
-.login-logo p { color: var(--text-light); font-size: 0.85rem; }
+t.speed(4)
+t.width(3)
+t.color(PRIMARY_COLOR)
+t.hideturtle()
 
-.login-footer { text-align: center; margin-top: 1.5rem; color: var(--text-light); font-size: 0.85rem; }
-.login-footer a { color: var(--primary); font-weight: 600; text-decoration: none; }
 
-/* ──── APP LAYOUT ──── */
-.app {
-  display: flex;
-  min-height: 100vh;
-}
+show_title("1. Basic Square Movement")
+t.shape("turtle")
+t.showturtle()
 
-/* ──── SIDEBAR ──── */
-.sidebar {
-  width: var(--sidebar-w);
-  background: linear-gradient(180deg, #1e1b4b 0%, #312e81 100%);
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  top: 0; left: 0;
-  height: 100vh;
-  z-index: 100;
-  transition: transform 0.3s ease;
-}
+for _ in range(4):
+    t.fd(100)
+    t.left(90)
 
-.sidebar-header {
-  padding: 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--white);
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-.sidebar-header i { font-size: 1.5rem; color: #a5b4fc; }
+t.penup()
+t.setposition(100, -100)
+t.pendown()
+t.fd(130)
 
-.sidebar-nav {
-  flex: 1;
-  padding: 1rem 0;
-  overflow-y: auto;
-}
+pause_until_click()
+t.clear()
 
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1.5rem;
-  color: #c7d2fe;
-  text-decoration: none;
-  font-weight: 500;
-  transition: all 0.2s;
-  border-radius: 0;
-}
-.nav-item:hover, .nav-item.active {
-  background: rgba(255,255,255,0.12);
-  color: var(--white);
-  border-left: 3px solid #a5b4fc;
-}
-.nav-item i { width: 18px; text-align: center; }
+t.reset()
+t.speed(4)
+t.color(PRIMARY_COLOR)
+t.width(3)
+show_title("2. Nested Squares")
 
-.sidebar-footer {
-  padding: 1rem 1.25rem;
-  border-top: 1px solid rgba(255,255,255,0.1);
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
+def square(length):
+    for i in range(4):
+        t.fd(length)
+        t.left(90)
 
-.avatar {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  background: var(--primary-light);
-  color: white;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 700;
-  font-size: 0.9rem;
-  flex-shrink: 0;
-}
+for size, color in zip([60, 100, 200], ACCENT_COLORS[:3]):
+    t.color(color)
+    square(size)
 
-.user-name { color: var(--white); font-weight: 600; font-size: 0.85rem; }
-.user-role { color: #a5b4fc; font-size: 0.72rem; }
+pause_until_click()
 
-.btn-logout {
-  margin-left: auto;
-  background: none;
-  border: none;
-  color: #c7d2fe;
-  cursor: pointer;
-  font-size: 1.1rem;
-  padding: 0.4rem;
-  border-radius: 6px;
-  transition: all 0.2s;
-}
-.btn-logout:hover { color: var(--danger); background: rgba(239,68,68,0.1); }
+t.reset()
+t.speed(0)
+t.width(3)
+show_title("3. Circles - Positive & Negative Radius")
 
-/* ──── MAIN CONTENT ──── */
-.main-content {
-  margin-left: var(--sidebar-w);
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
+t.color(ACCENT_COLORS[0])
+t.circle(100)
+t.color(ACCENT_COLORS[1])
+t.circle(-50)
 
-/* ──── TOPBAR ──── */
-.topbar {
-  background: var(--white);
-  padding: 1rem 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  box-shadow: 0 1px 0 var(--border);
-  position: sticky; top: 0; z-index: 50;
-}
+pause_until_click()
 
-.topbar-title { font-weight: 700; font-size: 1.1rem; flex: 1; }
-.topbar-right { display: flex; align-items: center; gap: 1rem; color: var(--text-light); font-size: 0.85rem; }
+t.reset()
+t.speed(0)
+t.tracer(5, 0)
+t.width(2)
+show_title("4. Circle Spiral Pattern")
 
-.btn-menu {
-  background: none; border: none; cursor: pointer;
-  color: var(--text-light); font-size: 1.2rem; display: none;
-}
+for angle in range(0, 360, 15):
+    t.color(ACCENT_COLORS[angle % len(ACCENT_COLORS)])
+    t.seth(angle)
+    t.circle(80)
 
-.notif-bell { position: relative; cursor: pointer; }
-.notif-bell i { font-size: 1.1rem; color: var(--text-light); }
-.badge {
-  position: absolute; top: -6px; right: -6px;
-  background: var(--danger); color: white;
-  font-size: 0.6rem; font-weight: 700;
-  width: 16px; height: 16px;
-  border-radius: 50%; display: flex;
-  align-items: center; justify-content: center;
-}
+t.update()
+pause_until_click()
 
-/* ──── PAGES ──── */
-.page { padding: 1.5rem; display: none; }
-.page.active { display: block; }
+t.reset()
+t.speed(0)
+t.tracer(3, 0)
+show_title("5. Growing Spiral with Colors")
 
-.page-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 1.5rem;
-}
-.page-header h2 { font-size: 1.4rem; font-weight: 700; }
-.page-header p { color: var(--text-light); font-size: 0.85rem; }
+for i in range(40):
+    t.color(ACCENT_COLORS[i % len(ACCENT_COLORS)])
+    t.pendown()
+    t.fd(2 + i * 4)
+    t.left(45)
+    t.width(max(1, i // 3))
+    t.penup()
 
-/* ──── STATS ──── */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
+t.update()
+pause_until_click()
 
-.stat-card {
-  background: var(--white);
-  border-radius: var(--radius);
-  padding: 1.25rem;
-  display: flex; align-items: center; gap: 1rem;
-  box-shadow: var(--shadow);
-  border-left: 4px solid transparent;
-}
-.stat-card.blue { border-color: var(--info); }
-.stat-card.green { border-color: var(--success); }
-.stat-card.orange { border-color: var(--warning); }
-.stat-card.purple { border-color: var(--primary); }
+t.reset()
+t.speed(4)
+t.width(4)
+show_title("6. Filled Triangle")
 
-.stat-icon {
-  width: 50px; height: 50px;
-  border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.3rem;
-}
-.blue .stat-icon { background: #eff6ff; color: var(--info); }
-.green .stat-icon { background: #f0fdf4; color: var(--success); }
-.orange .stat-icon { background: #fffbeb; color: var(--warning); }
-.purple .stat-icon { background: #f5f3ff; color: var(--primary); }
+t.color(ACCENT_COLORS[2])
+t.begin_fill()
+t.fd(150)
+t.seth(45)
+t.fd(150)
+t.seth(90)
+t.fd(150)
+t.end_fill()
 
-.stat-num { font-size: 1.8rem; font-weight: 700; line-height: 1; }
-.stat-label { color: var(--text-light); font-size: 0.78rem; margin-top: 0.25rem; }
+pause_until_click()
 
-/* ──── DASHBOARD GRID ──── */
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
 
-/* ──── CARD ──── */
-.card {
-  background: var(--white);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-}
-.card-header {
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; gap: 1rem;
-  flex-wrap: wrap;
-}
-.card-header h3 { font-size: 0.95rem; font-weight: 600; }
-.card-body { padding: 1.25rem; overflow-x: auto; }
+t.reset()
+t.speed(0)
+t.tracer(1, 0)
+t.width(2)
+show_title("7. Recursive Fractal Trees")
 
-/* ──── TABLE ──── */
-.table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-.table th {
-  text-align: left; padding: 0.6rem 0.75rem;
-  background: #f8fafc; color: var(--text-light);
-  font-weight: 600; font-size: 0.78rem; text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-.table td { padding: 0.7rem 0.75rem; border-bottom: 1px solid var(--border); }
-.table tr:last-child td { border-bottom: none; }
-.table tr:hover td { background: #f8fafc; }
-.empty { text-align: center; color: var(--text-light); padding: 2rem !important; }
+def drawfib(n, len_ang):
+    t.forward(2 * len_ang)
+    if n <= 1:
+        pass
+    else:
+        t.left(len_ang)
+        drawfib(n - 1, len_ang)
+        t.right(2 * len_ang)
+        drawfib(n - 2, len_ang)
+        t.left(len_ang)
+    t.backward(2 * len_ang)
 
-/* ──── BADGES ──── */
-.badge-pill {
-  display: inline-block; padding: 0.2rem 0.65rem;
-  border-radius: 999px; font-size: 0.72rem; font-weight: 600;
-}
-.badge-active { background: #dcfce7; color: #16a34a; }
-.badge-inactive { background: #fee2e2; color: #dc2626; }
-.badge-leave { background: #fef3c7; color: #d97706; }
-.badge-pending { background: #fef3c7; color: #d97706; }
-.badge-approved { background: #dcfce7; color: #16a34a; }
-.badge-rejected { background: #fee2e2; color: #dc2626; }
-.badge-released { background: #dcfce7; color: #16a34a; }
-.badge-present { background: #dcfce7; color: #16a34a; }
-.badge-absent { background: #fee2e2; color: #dc2626; }
-.badge-late { background: #fef3c7; color: #d97706; }
+start_points = [[-300, 250], [-150, 250], [-300, 110], 
+                [-80, 110], [-300, -150], [50, -150]]
 
-/* ──── FORMS ──── */
-.form-group {
-  display: flex; flex-direction: column; gap: 0.35rem;
-  margin-bottom: 1rem;
-}
-.form-group label { font-size: 0.82rem; font-weight: 600; color: var(--text); }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+for n, start_point in enumerate(start_points, 1):
+    x, y = start_point
+    t.color(ACCENT_COLORS[n % len(ACCENT_COLORS)])
+    t.penup()
+    t.setpos(x, y)
+    t.pendown()
+    drawfib(n, 30)
 
-input[type="text"], input[type="email"], input[type="password"],
-input[type="number"], input[type="date"], input[type="time"],
-select, textarea {
-  padding: 0.6rem 0.85rem;
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  font-family: inherit;
-  font-size: 0.88rem;
-  color: var(--text);
-  outline: none;
-  width: 100%;
-  transition: border-color 0.2s;
-  background: var(--white);
-}
-input:focus, select:focus, textarea:focus { border-color: var(--primary); }
+t.update()
+pause_until_click()
 
-.input-icon { position: relative; }
-.input-icon i { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-light); }
-.input-icon input { padding-left: 2.25rem; }
 
-.search-box { max-width: 240px; }
-.filter-select { max-width: 180px; }
+t.reset()
+t.speed(0)
+t.tracer(1, 0)
+t.width(2)
+show_title("8. Large Fibonacci Tree")
 
-/* ──── BUTTONS ──── */
-.btn {
-  display: inline-flex; align-items: center; gap: 0.4rem;
-  padding: 0.55rem 1.1rem;
-  border: none; border-radius: 8px;
-  font-family: inherit; font-size: 0.85rem; font-weight: 600;
-  cursor: pointer; transition: all 0.2s; text-decoration: none;
-}
-.btn-primary { background: var(--primary); color: white; }
-.btn-primary:hover { background: var(--primary-dark); }
-.btn-secondary { background: var(--secondary); color: var(--text); }
-.btn-secondary:hover { background: var(--border); }
-.btn-danger { background: var(--danger); color: white; }
-.btn-danger:hover { background: #dc2626; }
-.btn-full { width: 100%; justify-content: center; padding: 0.75rem; font-size: 0.95rem; }
+t.color("#34d399")
+drawfib(12, 12)
+t.update()
+pause_until_click()
 
-.btn-icon {
-  background: none; border: none; cursor: pointer;
-  padding: 0.35rem 0.5rem; border-radius: 6px;
-  font-size: 0.85rem; transition: all 0.2s;
-}
-.btn-edit { color: var(--primary); }
-.btn-edit:hover { background: #ede9fe; }
-.btn-del { color: var(--danger); }
-.btn-del:hover { background: #fee2e2; }
 
-/* ──── MODALS ──── */
-.modal-overlay {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.45);
-  z-index: 200;
-  display: flex; align-items: center; justify-content: center;
-  padding: 1rem;
-  backdrop-filter: blur(2px);
-}
-.modal-overlay.hidden { display: none; }
+t.reset()
+t.speed(0)
+t.tracer(1, 0)
+t.width(2)
+show_title("9. Koch Snowflake")
 
-.modal {
-  background: var(--white);
-  border-radius: 16px;
-  width: 100%;
-  max-width: 560px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: var(--shadow-lg);
-  animation: slideUp 0.25s ease;
-}
-.modal-sm { max-width: 400px; }
+def koch_curve(length, depth):
+    if depth == 0:
+        t.forward(length)
+    else:
+        length = length / 3
+        depth = depth - 1
+        koch_curve(length, depth)
+        t.right(60)
+        koch_curve(length, depth)
+        t.left(120)
+        koch_curve(length, depth)
+        t.right(60)
+        koch_curve(length, depth)
 
-@keyframes slideUp {
-  from { transform: translateY(30px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
-}
+for i in range(3):
+    t.color(ACCENT_COLORS[i])
+    koch_curve(220, 3)
+    t.left(120)
 
-.modal-header {
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-}
-.modal-header h3 { font-size: 1rem; font-weight: 700; }
-.modal-close {
-  background: none; border: none; cursor: pointer;
-  color: var(--text-light); font-size: 1rem;
-  border-radius: 6px; padding: 0.3rem 0.5rem;
-}
-.modal-close:hover { background: var(--secondary); }
-.modal-body { padding: 1.5rem; }
-.modal-footer {
-  padding: 1rem 1.5rem;
-  border-top: 1px solid var(--border);
-  display: flex; justify-content: flex-end; gap: 0.75rem;
-}
+t.update()
+pause_until_click()
 
-/* ──── ALERTS ──── */
-.alert {
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  font-size: 0.85rem;
-  font-weight: 500;
-}
-.alert-error { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
 
-/* ──── TOAST ──── */
-.toast {
-  position: fixed; bottom: 1.5rem; right: 1.5rem;
-  background: #1e293b; color: white;
-  padding: 0.85rem 1.25rem;
-  border-radius: 10px;
-  font-size: 0.88rem; font-weight: 500;
-  box-shadow: var(--shadow-lg);
-  z-index: 9999;
-  animation: fadeIn 0.3s ease;
-}
-.toast.success { background: #16a34a; }
-.toast.error { background: var(--danger); }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+t.reset()
+t.penup()
+t.goto(0, 0)
+t.color("#34d399")
+t.write("✓ Tutorial Complete!\nClick anywhere to continue...", 
+        align="center", font=("Arial", 18, "bold"))
 
-/* ──── DEPT CHART ──── */
-.dept-bar { margin-bottom: 0.75rem; }
-.dept-bar-label { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 0.25rem; font-weight: 500; }
-.dept-bar-track { background: #f1f5f9; border-radius: 999px; height: 8px; overflow: hidden; }
-.dept-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-light)); border-radius: 999px; transition: width 0.8s ease; }
+def printxy(x, y):
+    print(f"Clicked at: ({x:.1f}, {y:.1f})")
 
-/* ──── RESPONSIVE ──── */
-@media (max-width: 768px) {
-  .sidebar { transform: translateX(-100%); }
-  .sidebar.open { transform: translateX(0); }
-  .main-content { margin-left: 0; }
-  .btn-menu { display: block; }
-  .dashboard-grid { grid-template-columns: 1fr; }
-  .form-row { grid-template-columns: 1fr; }
-  .stats-grid { grid-template-columns: 1fr 1fr; }
-}
+t.onscreenclick(printxy)
+t.mainloop(
